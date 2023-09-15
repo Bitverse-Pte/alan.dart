@@ -32,7 +32,7 @@ class TxBuilder {
     _stdTx.body.messages.addAll(serialized);
   }
 
-  /// Sets the given [signatures] as the transaction sigantures.
+  /// Sets the given [signatures] as the transaction signatures.
   void setSignatures(List<SignatureV2> signatures) {
     final signerInfos = <SignerInfo>[];
     final rawSigs = <List<int>>[];

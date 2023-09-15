@@ -20,19 +20,17 @@ class TxSigner {
 
   /// Builds a new [TxSigner] from a given gRPC client channel and HTTP client.
   factory TxSigner.build(
-    GrpcOrGrpcWebClientChannel clientChannel,
-    http.Client httpClient,
+    NetworkInfo networkInfo,
   ) {
     return TxSigner(
-      authQuerier: AuthQuerier.build(clientChannel),
-      nodeQuerier: NodeQuerier.build(clientChannel),
+      authQuerier: AuthQuerier.build(networkInfo.gRPCChannel),
+      nodeQuerier: NodeQuerier.build(networkInfo.lcdInfo),
     );
   }
 
   /// Builds a new [TxSigner] from the given [NetworkInfo].
   factory TxSigner.fromNetworkInfo(NetworkInfo info) {
-    final httpClient = http.Client();
-    return TxSigner.build(info.gRPCChannel, httpClient);
+    return TxSigner.build(info);
   }
 
   /// Creates a new [Tx] object containing the given [msgs] and signs it using
@@ -70,7 +68,7 @@ class TxSigner {
     // chain does not have it yet
     var pubKey = account.pubKey;
     if (pubKey.value.isNotEmpty != true) {
-      final secp256Key = secp256.PubKey.create()..key = wallet.publicKey;
+      secp256.PubKey secp256Key = secp256.PubKey.create()..key = wallet.publicKey;
       pubKey = Codec.serialize(secp256Key);
     }
 

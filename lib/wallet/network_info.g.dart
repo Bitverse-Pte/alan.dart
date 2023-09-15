@@ -35,17 +35,15 @@ Map<String, dynamic> _$GRPCInfoToJson(GRPCInfo instance) => <String, dynamic>{
 LCDInfo _$LCDInfoFromJson(Map<String, dynamic> json) {
   $checkKeys(
     json,
-    requiredKeys: const ['host'],
+    requiredKeys: const ['lcdUrl'],
   );
   return LCDInfo(
-    host: json['host'] as String,
-    port: json['port'] as int? ?? 1317,
+    lcdUrl: json['lcdUrl'] as String,
   );
 }
 
 Map<String, dynamic> _$LCDInfoToJson(LCDInfo instance) => <String, dynamic>{
-      'host': instance.host,
-      'port': instance.port,
+      'lcdUrl': instance.lcdUrl,
     };
 
 NetworkInfo _$NetworkInfoFromJson(Map<String, dynamic> json) {

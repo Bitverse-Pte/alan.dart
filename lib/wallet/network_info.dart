@@ -107,15 +107,11 @@ class GRPCInfo extends Equatable {
 /// Contains the information about the LCD endpoint
 @JsonSerializable(explicitToJson: true)
 class LCDInfo extends Equatable {
-  @JsonKey(name: 'host', required: true)
-  final String host;
-
-  @JsonKey(name: 'port', defaultValue: 1317)
-  final int port;
+  @JsonKey(name: 'lcdUrl', required: true)
+  final String lcdUrl;
 
   LCDInfo({
-    required this.host,
-    this.port = 1317,
+    required this.lcdUrl,
   });
 
   factory LCDInfo.fromJson(Map<String, dynamic> json) {
@@ -127,22 +123,15 @@ class LCDInfo extends Equatable {
   }
 
   /// Returns the full URL of the LCD endpoint
-  String get fullUrl {
-    var hostWithProtocol = host;
-    if (!hostWithProtocol.startsWith(RegExp('http(s)?://'))) {
-      hostWithProtocol = 'http://$hostWithProtocol';
-    }
-    return '$hostWithProtocol:$port';
-  }
+  String get fullUrl => lcdUrl;
 
   @override
-  List<Object?> get props => [host, port];
+  List<Object?> get props => [lcdUrl];
 
   @override
   String toString() {
     return 'LCDInfo {'
-        'host: $host, '
-        'port: $port '
+        'lcdUrl: $lcdUrl, '
         '}';
   }
 }
@@ -168,14 +157,17 @@ class NetworkInfo extends Equatable {
     required this.grpcInfo,
   });
 
-  factory NetworkInfo.fromSingleHost({
+  factory NetworkInfo.fromHost({
     required String bech32Hrp,
-    required String host,
+    required String lcdUrl,
+    required String grpcHost,
+    int grpcPort = 9090,
+    ChannelCredentials credentials = const ChannelCredentials.insecure(),
   }) {
     return NetworkInfo(
       bech32Hrp: bech32Hrp,
-      lcdInfo: LCDInfo(host: host),
-      grpcInfo: GRPCInfo(host: host),
+      lcdInfo: LCDInfo(lcdUrl: lcdUrl),
+      grpcInfo: GRPCInfo(host: grpcHost, port: grpcPort, credentials: credentials),
     );
   }
 
